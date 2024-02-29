@@ -1,0 +1,383 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Side Validation</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- Include only jQuery UI and its datepicker module -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"></script>
+
+
+    <style>
+        .box {
+            width: 100%;
+            max-width: 600px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 16px;
+            margin: 0 auto;
+        }
+
+        .error {
+            color: red;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .form-group input.valid {
+            background-color: transparent;
+        }
+
+        .form-group small {
+            position: absolute;
+            margin: 3px;
+            visibility: hidden;
+        }
+
+        .form-group.success input {
+            border: 2px solid blue;
+        }
+
+        .form-group.error input {
+            border: 2px solid orange;
+        }
+
+        .form-group div input {
+            display: inline;
+            margin-right: 10px;
+        }
+
+        .form-group input[type="radio"] {
+            display: inline;
+            margin-right: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 4px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        #error_name {
+            color: red;
+        }
+
+        #state {
+            color: black;
+        }
+
+        #course{
+            color: black;
+        }
+
+    </style>
+</head>
+
+<body style="background-color: grey;"> <!-- onload="setMinDate() -->
+    <div class="container">
+        <div class="table-responsive">
+            <div class="box">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 align="center">Registration Form</h3><br />
+                    </div>
+                    <div class="card-body">
+                        <form id="validate_form" method="POST">
+
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" name="name" placeholder="Enter Name" class="form-control">
+
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="dob">Date of Birth</label>
+                                <input type="text" name="dob" id="dob" class="form-control">
+                                <small></small>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="age">Age</label>
+                                <input type="text" readonly name="age" id="age" class="form-control" disabled>
+
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>State</label>
+                                <select name="state" id="state" class="form-control">
+                                    
+                                    <option value="Karnataka">Karnataka</option>
+                                    <option value="Mumbai">Mumbai</option>
+                                    <option value="Pune">Pune</option>
+                                    <option value="Hydrabad">Hydrabad</option>
+
+                                </select>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="email">Mobile</label>
+                                <input type="text" name="mobile" placeholder="Enter Mobile Number" class="form-control">
+
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="text" name="email" placeholder="Enter Email" class="form-control">
+
+                            </div>
+                            <br>
+
+                            <!-- Password and Confirm Password -->
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" name="password" id="password" placeholder="Enter the Password"
+                                    class="form-control">
+                                <small></small>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="Conform_password">Confirm Password</label>
+                                <input type="password" name="Conform_password" id="Conform_password"
+                                    placeholder="Enter The Confirm Password" class="form-control">
+                                <small></small>
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label for="mobile">Address</label>
+                                <textarea name="Address" placeholder="Enter your Address" class="form-control"></textarea>
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label>Gender</label>
+                                <div>
+                                    <input type="radio" id="male" name="gender" value="Male"> Male
+                                    <input type="radio" id="female" name="gender" value="Female"> Female
+                                    <input type="radio" id="other" name="gender" value="Other"> Other
+                                </div>
+                                <small id="error_gender" class="text-danger"></small>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Hobbies</label>
+                                <div>
+                                    <input type="checkbox" id="hobby1" name="hobbies[]" value="Reading"> Reading
+                                    <input type="checkbox" id="hobby2" name="hobbies[]" value="Sports"> Sports
+                                    <input type="checkbox" id="hobby3" name="hobbies[]" value="Music"> Music
+                                    <input type="checkbox" id="hobby4" name="hobbies[]" value="Travel"> Travel
+                                </div>
+                                <small id="error_hobbies" class="text-danger"></small>
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label>Courses</label>
+                                <select name="course" id="course" class="form-control" multiple>
+                                    <option value="">Select course</option>
+                                    <option value="HTML">HTML</option>
+                                    <option value="CSS">CSS</option>
+                                    <option value="javascript">javascript</option>
+                                    <option value="PHP">PHP</option>
+                                </select>
+                            </div>
+                            <br>
+                            
+
+                            <div class="form-group">
+                                <input type="submit" name="submit" value="Submit" class="btn btn-success" />
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"></script>
+    <script type="text/javascript">
+        // noDigits method 
+        jQuery.validator.addMethod("noDigits", function (value, element) {
+            return this.optional(element) || !/\d/.test(value);
+        }, "Please enter a value without digits");
+
+        // For password
+        jQuery.validator.addMethod("pattern", function (value, element, param) {
+            if (this.optional(element)) {
+                return true;
+            }
+            if (typeof param === 'string') {
+                param = new RegExp('^(?:' + param + ')$');
+            }
+
+            return param.test(value);
+        }, "Invalid format.");
+
+        // for Mobile
+        jQuery.validator.addMethod("customMobile", function (value, element) {
+            return this.optional(element) || /^[6-9]/.test(value);
+        }, "Mobile number should start with 6, 7, 8, or 9");
+
+        jQuery.validator.addMethod("atLeastOneCourse", function(value, element) {
+            return $(element).find('option:selected').length > 0;
+        }, "Please select at least one course.");
+
+
+
+        $(document).ready(function () 
+        {
+          
+            $("#dob").datepicker({
+                maxDate: 0,
+                dateFormat: 'yy-mm-dd',
+                onSelect: function (dateText) {
+                    calculateAge(dateText);
+                }
+            });
+
+            calculateAge($("#dob").val());
+
+            function calculateAge(selectedDate) {
+                if (!selectedDate) {
+                    $("#age").attr("readonly", true).val("");
+                    return;
+                }
+                var dob = new Date(selectedDate);
+                var today = new Date();
+                var age = today.getFullYear() - dob.getFullYear();
+                var monthDiff = today.getMonth() - dob.getMonth();
+
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                    age--;
+                }
+                $("#age").removeAttr("readonly").val(age);
+            }
+
+
+
+            // Initialize the validation plugin
+            $("#validate_form").validate({
+                rules: {
+                    name: {
+                        required: true,
+                        noDigits: true
+                    },
+                    dob: "required",
+                    state: "required",
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                    password: {
+                        required: true,
+                        maxlength: 8,
+                        minlength: 8,
+                        pattern: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+                    },
+                    Conform_password: {
+                        required: true,
+                        equalTo: "#password"
+                    },
+                    mobile: {
+                        required: true,
+                        digits: true,
+                        minlength: 10,
+                        maxlength: 10,
+                        customMobile: true
+                    },
+                    Address: "required",
+                    gender: {
+                        required: true,
+                    },
+                    "hobbies[]": {
+                        required: true,
+                        minlength: 1
+                    },
+                    "course": {
+                        required: true,
+                        atLeastOneCourse: true
+                    }
+                },
+                messages: {
+                    name: "Please enter your Name without digits",
+                    dob: "Enter Date of Birth",
+                    state: "Select State",
+                    email: "This field is required",
+                    password: {
+                        required: "Enter the Password",
+                        minlength: "Password must be at least 8 characters long",
+                        length: "Password must be at least 8 characters long",
+                        pattern: "Password must contain at least one letter and one special character"
+                    },
+                    Conform_password: "Please enter the Password again",
+                    mobile: {
+                        required: "Please enter Mobile Numbers",
+                        digits: "Mobile number should contain only digits",
+                        maxlength: "Mobile number should be 10 digits",
+                        maxlength: "Mobile number should be 10 digits",
+                        customMobile: "Mobile number should start with 6, 7, 8, or 9"
+                    },
+                    Address: "Enter Your Address",
+                    gender: {
+                        required: "Please select a gender",
+                    },
+                    "hobbies[]": {
+                        required: "Please select at least one hobby.",
+                        minlength: "Please select at least one hobby."
+                    },
+                    "course": "Please select Courses."
+                    
+                },
+                errorPlacement: function (error, element) {
+                    if (element.attr("name") == "gender" || element.attr("type") == "checkbox") {
+                        // For gender and checkboxes
+                        var target = element.closest('.form-group');
+                        error.insertAfter(target);
+                    } else {
+                        // For other fields
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function (form) {
+                   
+                    alert("Form successfully submitted!");
+                  
+                }
+               
+            });
+           
+            
+        });
+    </script>
+</body>
+
+</html>
