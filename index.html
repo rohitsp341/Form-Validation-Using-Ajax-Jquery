@@ -117,7 +117,7 @@
 
                             <div class="form-group">
                                 <label for="dob">Date of Birth</label>
-                                <input type="text" name="dob" id="dob" class="form-control">
+                                <input type="date" name="dob" id="dob" class="form-control">
                                 <small></small>
                             </div>
                             <br>
@@ -253,9 +253,7 @@
 
 
 
-        $(document).ready(function () 
-        {
-          
+        $(document).ready(function(){
             $("#dob").datepicker({
                 maxDate: 0,
                 dateFormat: 'yy-mm-dd',
@@ -264,6 +262,7 @@
                 }
             });
 
+            // Initial call on page load
             calculateAge($("#dob").val());
 
             function calculateAge(selectedDate) {
@@ -281,8 +280,6 @@
                 }
                 $("#age").removeAttr("readonly").val(age);
             }
-
-
 
             // Initialize the validation plugin
             $("#validate_form").validate({
