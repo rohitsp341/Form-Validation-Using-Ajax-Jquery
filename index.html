@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -117,7 +116,7 @@
 
                             <div class="form-group">
                                 <label for="dob">Date of Birth</label>
-                                <input type="date" name="dob" id="dob" class="form-control">
+                                <input type="text" name="dob" id="dob" class="form-control">
                                 <small></small>
                             </div>
                             <br>
@@ -144,14 +143,14 @@
 
                             <div class="form-group">
                                 <label for="email">Mobile</label>
-                                <input type="text" name="mobile" placeholder="Enter Mobile Number" class="form-control">
+                                <input type="text" name="mobile" id="mobile" placeholder="Enter Mobile Number" class="form-control">
 
                             </div>
                             <br>
 
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="text" name="email" placeholder="Enter Email" class="form-control">
+                                <input type="text" name="email" id="email" placeholder="Enter Email" class="form-control">
 
                             </div>
                             <br>
@@ -174,7 +173,7 @@
                             <br>
                             <div class="form-group">
                                 <label for="mobile">Address</label>
-                                <textarea name="Address" placeholder="Enter your Address" class="form-control"></textarea>
+                                <textarea name="Address" id="Address" placeholder="Enter your Address" class="form-control"></textarea>
                             </div>
                             <br>
                             <div class="form-group">
@@ -253,16 +252,18 @@
 
 
 
-        $(document).ready(function(){
+        $(document).ready(function () 
+        {
+          
             $("#dob").datepicker({
                 maxDate: 0,
                 dateFormat: 'yy-mm-dd',
                 onSelect: function (dateText) {
                     calculateAge(dateText);
+                    $("#validate_form").valid(); 
                 }
             });
 
-            // Initial call on page load
             calculateAge($("#dob").val());
 
             function calculateAge(selectedDate) {
@@ -281,6 +282,8 @@
                 $("#age").removeAttr("readonly").val(age);
             }
 
+
+
             // Initialize the validation plugin
             $("#validate_form").validate({
                 rules: {
@@ -288,7 +291,11 @@
                         required: true,
                         noDigits: true
                     },
-                    dob: "required",
+                    dob: {
+                        required: true,
+                        date: true, 
+                    },
+
                     state: "required",
                     email: {
                         required: true,
@@ -371,9 +378,22 @@
                 }
                
             });
+            function loadTable(){
+
+            $.ajax({
+                url: "Ajax-load.php",
+                type: "POST",
+                success: function(data){
+                    $("#table-data").html(data);
+                }
+            });
+
+            }
+            loadTable();
            
             
         });
+
     </script>
 </body>
 
